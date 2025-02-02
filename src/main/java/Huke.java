@@ -54,9 +54,22 @@ public class Huke {
     }
 
     private static int addTask(Task[] tasks, int taskCount, String command) {
-        tasks[taskCount] = new Task(command);
+        if (command.startsWith("todo")) {
+            tasks[taskCount] = new Todo(command.substring(5));
+        } else if (command.startsWith("deadline")) {
+            String[] deadline = command.substring(9).split(" /by ");
+            tasks[taskCount] = new Deadline(deadline[0], deadline[1]);
+        } else if (command.startsWith("event")) {
+            String[] event = command.substring(6).split(" /from ");
+            String[] eventTime = event[1].split(" /to ");
+            tasks[taskCount] = new Event(event[0], eventTime[0], eventTime[1]);
+        } else {
+            System.out.println("Add failed. Please specify a type.");
+            return taskCount;
+        }
         taskCount += 1;
         System.out.println("added: " + command);
+        System.out.println("Now you have " + taskCount + " tasks in the list.");
         return taskCount;
     }
 
