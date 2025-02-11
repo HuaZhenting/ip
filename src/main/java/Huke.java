@@ -96,7 +96,6 @@ public class Huke {
                 throw new WrongFormatException();
             }
             tasks[taskCount] = new Event(event[0].trim(), eventTime[0].trim(), eventTime[1].trim());
-
         } else {
             throw new TaskNotSpecifiedException();
         }
