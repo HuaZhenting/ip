@@ -12,27 +12,39 @@ public class Huke {
         Task[] tasks = new Task[100];
         int taskCount = 0;
         while (true) {
-            String command = in.nextLine();
-            if (command.equals("bye")) {
-                exit();
-            } else if (command.equals("list")){
-                printTasks(taskCount, tasks);
-            } else if (command.startsWith("mark")){
-                markTask(command, taskCount, tasks);
-            } else if (command.startsWith("unmark")){
-                unmarkTask(command, taskCount, tasks);
-            } else {
-                taskCount = addTask(tasks, taskCount, command);
+            try {
+                String command = in.nextLine();
+                if (command.equals("bye")) {
+                    exit();
+                } else if (command.equals("list")){
+                    printTasks(taskCount, tasks);
+                } else if (command.startsWith("mark")){
+                    markTask(command, taskCount, tasks);
+                } else if (command.startsWith("unmark")){
+                    unmarkTask(command, taskCount, tasks);
+                } else {
+                    taskCount = addTask(tasks, taskCount, command);
+                }
+            } catch (TaskNotSpecifiedException e) {
+                System.out.println("Not sure what you want, please adhere to the format");;
+            } catch (MarkedException e) {
+                System.out.println("This Task is already marked as Done!");;
+            } catch (UnmarkedException e) {
+                System.out.println("This Task is not done yet TAT");;
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println("Hummm, looks like you are referring to a non-existing task..");
+            } catch (WrongFormatException e) {
+                System.out.println("Please adhere to the format");
             }
         }
     }
 
-    private static void unmarkTask(String command, int taskCount, Task[] tasks) {
+    private static void unmarkTask(String command, int taskCount, Task[] tasks) throws UnmarkedException, IndexOutOfBoundsException {
         int position = Integer.parseInt(command.substring(7)) - 1;
         if (position >= taskCount) {
-            System.out.println("Task does not exist");
+            throw new IndexOutOfBoundsException();
         } else if (tasks[position].getStatusIcon().equals(" ")) {
-            System.out.println("Task already marked not done");
+            throw new UnmarkedException();
         } else {
             tasks[position].setNotDone();
             System.out.println("OK, I've marked this task as not done yet:");
@@ -40,12 +52,12 @@ public class Huke {
         }
     }
 
-    private static void markTask(String command, int taskCount, Task[] tasks) {
+    private static void markTask(String command, int taskCount, Task[] tasks) throws MarkedException, IndexOutOfBoundsException{
         int position = Integer.parseInt(command.substring(5)) - 1;
         if (position >= taskCount) {
-            System.out.println("Task does not exist");
+            throw new IndexOutOfBoundsException();
         } else if (tasks[position].getStatusIcon().equals("X")) {
-            System.out.println("Task already marked done");
+            throw new MarkedException();
         } else {
             tasks[position].setDone();
             System.out.println("Nice! I've marked this task as done:");
@@ -53,19 +65,40 @@ public class Huke {
         }
     }
 
-    private static int addTask(Task[] tasks, int taskCount, String command) {
+    private static int addTask (Task[] tasks, int taskCount, String command) throws WrongFormatException, TaskNotSpecifiedException {
         if (command.startsWith("todo")) {
-            tasks[taskCount] = new Todo(command.substring(5));
+            String taskDescription = command.substring(4).trim();
+            if (taskDescription.isEmpty()) {
+                throw new TaskNotSpecifiedException();
+            }
+            tasks[taskCount] = new Todo(taskDescription);
         } else if (command.startsWith("deadline")) {
-            String[] deadline = command.substring(9).split(" /by ");
-            tasks[taskCount] = new Deadline(deadline[0], deadline[1]);
+            String taskDetails = command.substring(8).trim();
+            if (taskDetails.isEmpty() || !taskDetails.contains(" /by ")) {
+                throw new WrongFormatException();
+            }
+            String[] deadline = taskDetails.split(" /by ");
+            if (deadline.length != 2 || deadline[0].trim().isEmpty() || deadline[1].trim().isEmpty()) {
+                throw new WrongFormatException();
+            }
+            tasks[taskCount] = new Deadline(deadline[0].trim(), deadline[1].trim());
         } else if (command.startsWith("event")) {
-            String[] event = command.substring(6).split(" /from ");
-            String[] eventTime = event[1].split(" /to ");
-            tasks[taskCount] = new Event(event[0], eventTime[0], eventTime[1]);
+            String taskDetails = command.substring(5).trim();
+            if (taskDetails.isEmpty() || !taskDetails.contains(" /from ") || !taskDetails.contains(" /to ")) {
+                throw new WrongFormatException();
+            }
+            String[] event = taskDetails.split(" /from ", 2);
+            if (event.length != 2 || event[0].trim().isEmpty()) {
+                throw new WrongFormatException();
+            }
+            String[] eventTime = event[1].split(" /to ", 2);
+            if (eventTime.length != 2 || eventTime[0].trim().isEmpty() || eventTime[1].trim().isEmpty()) {
+                throw new WrongFormatException();
+            }
+            tasks[taskCount] = new Event(event[0].trim(), eventTime[0].trim(), eventTime[1].trim());
+
         } else {
-            System.out.println("Add failed. Please specify a type.");
-            return taskCount;
+            throw new TaskNotSpecifiedException();
         }
         taskCount += 1;
         System.out.println("added: " + command);
