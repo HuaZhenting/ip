@@ -117,7 +117,7 @@ public class Huke {
     }
 
     private static void printTasks(int taskCount, Task[] tasks) {
-        for (int i = 0; i < taskCount; i ++) {
+        for (int i = 0; i < taskCount; i++) {
             System.out.println((i + 1) + "." + tasks[i]);
         }
     }
