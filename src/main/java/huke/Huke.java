@@ -1,3 +1,14 @@
+package huke;
+
+import huke.exception.MarkedException;
+import huke.exception.TaskNotSpecifiedException;
+import huke.exception.UnmarkedException;
+import huke.exception.WrongFormatException;
+import huke.task.Deadline;
+import huke.task.Event;
+import huke.task.Task;
+import huke.task.Todo;
+
 import java.util.Scanner;
 
 public class Huke {
@@ -7,7 +18,7 @@ public class Huke {
     }
     
     public static void main(String[] args) {
-        System.out.println(" Hello! I'm Huke\n" + " What can I do for you?");
+        System.out.println(" Hello! I'm huke.huke\n" + " What can I do for you?");
         Scanner in = new Scanner(System.in);
         Task[] tasks = new Task[100];
         int taskCount = 0;
@@ -28,9 +39,9 @@ public class Huke {
             } catch (TaskNotSpecifiedException e) {
                 System.out.println("Not sure what you want, please adhere to the format");;
             } catch (MarkedException e) {
-                System.out.println("This Task is already marked as Done!");;
+                System.out.println("This huke.task.Task is already marked as Done!");;
             } catch (UnmarkedException e) {
-                System.out.println("This Task is not done yet TAT");;
+                System.out.println("This huke.task.Task is not done yet TAT");;
             } catch (IndexOutOfBoundsException e) {
                 System.out.println("Hummm, looks like you are referring to a non-existing task..");
             } catch (WrongFormatException e) {
@@ -106,7 +117,7 @@ public class Huke {
     }
 
     private static void printTasks(int taskCount, Task[] tasks) {
-        for (int i = 0; i < taskCount; i ++) {
+        for (int i = 0; i < taskCount; i++) {
             System.out.println((i + 1) + "." + tasks[i]);
         }
     }
