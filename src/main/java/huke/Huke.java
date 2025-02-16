@@ -31,6 +31,8 @@ public class Huke {
                     printTasks(taskCount, tasks);
                 } else if (command.startsWith("mark")){
                     markTask(command, taskCount, tasks);
+                } else if (command.startsWith("delete")){
+                    taskCount = deleteTask(command, taskCount, tasks);
                 } else if (command.startsWith("unmark")){
                     unmarkTask(command, taskCount, tasks);
                 } else {
@@ -47,6 +49,22 @@ public class Huke {
             } catch (WrongFormatException e) {
                 System.out.println("Please adhere to the format");
             }
+        }
+    }
+
+    private static int deleteTask(String command, int taskCount, Task[] tasks) throws IndexOutOfBoundsException {
+        int position = Integer.parseInt(command.substring(7)) - 1;
+        if (position >= taskCount) {
+            throw new IndexOutOfBoundsException();
+        } else {
+            System.out.println("OK, I've deleted this task for you:");
+            System.out.println(tasks[position]);
+            for (int i = position; i < taskCount - 1; i++) {
+                tasks[i] = tasks[i + 1];
+            }
+            tasks[taskCount - 1] = null;
+            taskCount = taskCount - 1;
+            return taskCount;
         }
     }
 
