@@ -13,15 +13,17 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Huke {
-    private static ArrayList<Task> tasks = new ArrayList<>();
+    private static ArrayList<Task> tasks;
 
     public static void exit() {
         System.out.println(" Bye. Hope to see you again soon!");
+        Storage.saveTasks(tasks);
         System.exit(0);
     }
     
     public static void main(String[] args) {
-        System.out.println(" Hello! I'm huke.huke\n" + " What can I do for you?");
+        System.out.println("Hello! I'm huke!");
+        tasks = Storage.loadTasks();
         Scanner in = new Scanner(System.in);
         while (true) {
             try {
@@ -39,6 +41,7 @@ public class Huke {
                 } else {
                     addTask(command);
                 }
+                Storage.saveTasks(tasks);
             } catch (TaskNotSpecifiedException e) {
                 System.out.println("Not sure what you want, please adhere to the format");;
             } catch (MarkedException e) {
@@ -61,6 +64,7 @@ public class Huke {
             System.out.println("OK, I've deleted this task for you:");
             System.out.println(tasks.remove(position));
         }
+        Storage.saveTasks(tasks);
     }
 
     private static void unmarkTask(String command) throws UnmarkedException, IndexOutOfBoundsException {
@@ -74,6 +78,7 @@ public class Huke {
             System.out.println("OK, I've marked this task as not done yet:");
             System.out.println(tasks.get(position));
         }
+        Storage.saveTasks(tasks);
     }
 
     private static void markTask(String command) throws MarkedException, IndexOutOfBoundsException{
@@ -87,6 +92,7 @@ public class Huke {
             System.out.println("Nice! I've marked this task as done:");
             System.out.println(tasks.get(position));
         }
+        Storage.saveTasks(tasks);
     }
 
     private static void addTask (String command) throws WrongFormatException, TaskNotSpecifiedException {
@@ -127,6 +133,7 @@ public class Huke {
         tasks.add(newTask);
         System.out.println("added: " + command);
         System.out.println("Now you have " + tasks.size() + " tasks in the list.");
+        Storage.saveTasks(tasks);
     }
 
     private static void printTasks() {
