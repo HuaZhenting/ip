@@ -14,22 +14,20 @@ import java.util.ArrayList;
 
 public class Huke {
     private static ArrayList<Task> tasks;
+    private Ui ui;
 
-    public static void exit() {
-        System.out.println(" Bye. Hope to see you again soon!");
-        Storage.saveTasks(tasks);
-        System.exit(0);
-    }
-    
     public static void main(String[] args) {
-        System.out.println("Hello! I'm huke!");
+        Ui ui = new Ui();
+        ui.printWelcome();
         tasks = Storage.loadTasks();
         Scanner in = new Scanner(System.in);
         while (true) {
             try {
                 String command = in.nextLine();
                 if (command.equals("bye")) {
-                    exit();
+                    ui.printExit();
+                    Storage.saveTasks(tasks);
+                    System.exit(0);
                 } else if (command.equals("list")){
                     printTasks();
                 } else if (command.startsWith("mark")){
@@ -43,15 +41,15 @@ public class Huke {
                 }
                 Storage.saveTasks(tasks);
             } catch (TaskNotSpecifiedException e) {
-                System.out.println("Not sure what you want, please adhere to the format");;
+                ui.printNotSpecified();
             } catch (MarkedException e) {
-                System.out.println("This huke.task.Task is already marked as Done!");;
+                ui.printMarked();
             } catch (UnmarkedException e) {
-                System.out.println("This Task is not done yet TAT");;
+                ui.printUnmarked();
             } catch (IndexOutOfBoundsException e) {
-                System.out.println("Hummm, looks like you are referring to a non-existing task..");
+                ui.printNonExist();
             } catch (WrongFormatException e) {
-                System.out.println("Please adhere to the format");
+                ui.printWrongFormat();
             }
         }
     }
