@@ -1,13 +1,19 @@
 package huke.task;
 
 public class Todo extends Task {
+
     public Todo(String description) {
         super(description);
+        this.taskForm = "T";
+    }
+
+    public Todo(String description, boolean isDone) {
+        super(description, isDone);
     }
 
     @Override
-    public String toFileString() {
-        return "T | " + (isDone ? "1" : "0") + " | " + description;
+    public String toFileFormat() {
+        return this.taskForm + super.toFileFormat();
     }
 
     @Override
@@ -15,4 +21,3 @@ public class Todo extends Task {
         return "[T]" + super.toString();
     }
 }
-

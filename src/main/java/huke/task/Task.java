@@ -1,35 +1,43 @@
 package huke.task;
 
-public abstract class Task {
+public class Task {
     protected String description;
     protected boolean isDone;
+    protected String taskForm = "T";
 
     public Task(String description) {
         this.description = description;
         this.isDone = false;
     }
 
+    public Task(String description, boolean isDone) {
+        this.description = description;
+        this.isDone = isDone;
+    }
+
     public String getStatusIcon() {
         return (isDone ? "X" : " "); // mark done task with X
     }
 
-    public void setDone() {
-        this.isDone = true;
+    public Task markAsDone() {
+        isDone = true;
+        return this;
     }
 
-    public void setNotDone() {
+    public Task markAsUndone() {
         this.isDone = false;
+        return this;
     }
 
-    public abstract String toFileString();
+    public String toFileFormat() {
+        return  " | " + (isDone ? "1" : "0") + " | " + description;
+    }
 
-    @Override
+    public String getDescription() {
+        return description;
+    }
+
     public String toString() {
-        return "[" + this.getStatusIcon() + "] " + description;
-    }
-
-    public boolean contains(String term) {
-        return description.toLowerCase().contains(term.toLowerCase());
+        return "[" + this.getStatusIcon() + "] " + this.description;
     }
 }
-

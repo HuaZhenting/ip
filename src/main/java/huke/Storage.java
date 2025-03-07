@@ -1,91 +1,79 @@
 package huke;
 
-import huke.task.Deadline;
-import huke.task.Event;
-import huke.task.Task;
-import huke.task.Todo;
-
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.nio.file.*;
+import java.util.*;
+
+import huke.exception.HukeException;
+import huke.task.*;
 
 public class Storage {
-    private static final String FILE_PATH = "./data/huke.txt";
+    private static String FILE_PATH;
 
-    public static ArrayList<Task> loadTasks() {
-        ArrayList<Task> tasks = new ArrayList<>();
-        File file = new File(FILE_PATH);
-
-        if (!file.exists()) {
-            file.getParentFile().mkdirs();
-            System.out.println("Looks like you are new here!");
-            System.out.println("I've created a new list for you!");
-            return tasks;
-        }
-
-        System.out.println("Please task a look at your list!");
+    public Storage(String path) {
+        this.FILE_PATH = path;
         try {
-            printFileContents(FILE_PATH);
-            Scanner s = new Scanner(new File(FILE_PATH));
-            while (s.hasNext()) {
-                String line = s.nextLine();
-                String[] parts = line.split(" \\| ");
-                if (parts.length < 3) {
-                    continue;
-                }
-                Task task;
-                boolean isDone = parts[1].equals("1");
-
-                switch (parts[0]) {
-                case "T":
-                    task = new Todo(parts[2]);
-                    break;
-                case "D":
-                    if (parts.length < 4) continue;
-                    task = new Deadline(parts[2], parts[3]);
-                    break;
-                case "E":
-                    if (parts.length < 5) continue;
-                    task = new Event(parts[2], parts[3], parts[4]);
-                    break;
-                default:
-                    continue;
-                }
-
-                if (isDone) {
-                    task.setDone();
-                }
-
-                tasks.add(task);
+            Path filePath = Paths.get(path);
+            if (!Files.exists(filePath)) {
+                Files.createDirectories(filePath.getParent());
+                Files.createFile(filePath);
             }
         } catch (IOException e) {
-            System.out.println("Error loading saved tasks");
+            System.out.println("Error: Create File Failure");
+        }
+    }
+
+    public static ArrayList<Task> loadTask() throws HukeException {
+        ArrayList<Task> tasks = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                try {
+                    tasks.add(parseTask(line));
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Line corrupted:" + e.getMessage());
+                }
+            }
+        } catch (HukeException e) {
+            throw e;
+        } catch (IOException e) {
+            System.out.println("Error: Read File Failure");
         }
         return tasks;
     }
 
-    public static void saveTasks(ArrayList<Task> tasks) {
-        try {
-            new FileWriter(FILE_PATH, false).close();
+    private static Task parseTask(String line) throws HukeException {
+        String[] parts = line.split(" \\| ");
+        if (parts.length < 3) {
+            throw new HukeException(HukeException.unknownCommandError());
+        }
+        boolean isDone = parts[1].equals("1");
+        switch (parts[0]) {
+        case "T":
+            return new Todo(parts[2], isDone);
+        case "D":
+            if (parts.length < 4) {
+                throw new HukeException(HukeException.deadlineError());
+            }
+            return new Deadline(parts[2], isDone, parts[3]);
+        case "E":
+            if (parts.length < 5) {
+                throw new HukeException(HukeException.eventError());
+            }
+            return new Event(parts[2], isDone, parts[3], parts[4]);
+        default:
+            throw new HukeException(HukeException.unknownError());
+        }
+    }
+
+    public static void saveTask(ArrayList<Task> tasks) {
+        try (BufferedWriter w = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (Task task : tasks) {
-                appendToFile(FILE_PATH, task.toFileString() + "\n");
+                w.write(task.toFileFormat()); // Custom method to format each task
+                w.newLine();
             }
         } catch (IOException e) {
-            System.out.println("Error saving tasks.");
+            System.out.println("Error: Save File Failure");
         }
-    }
-
-    public static void printFileContents(String filepath) throws FileNotFoundException {
-        File f = new File(filepath);
-        Scanner s = new Scanner(f);
-        while (s.hasNext()) {
-            System.out.println(s.nextLine());
-        }
-    }
-
-    private static void appendToFile(String filePath, String textToAppend) throws IOException {
-        FileWriter fw = new FileWriter(filePath, true); // Append mode
-        fw.write(textToAppend);
-        fw.close();
     }
 }

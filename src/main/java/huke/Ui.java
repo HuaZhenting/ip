@@ -1,17 +1,19 @@
 package huke;
 
-import huke.task.*;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
+import huke.task.Task;
+
 public class Ui {
+    private static final String dottedLine = "  ------------------------------";
     private final Scanner scanner;
 
     public Ui() {
         this.scanner = new Scanner(System.in);
     }
 
-    public String readCommand() {
+    public String readUserCommand() {
         if (scanner.hasNextLine()) {
             return scanner.nextLine().trim();
         } else {
@@ -19,25 +21,25 @@ public class Ui {
         }
     }
 
-    public static void printWelcome() {
-        System.out.println("Hello! I'm huke!");
+    public void printWelcome() {
+        System.out.println("Hello! I'm Huke!");
     }
 
-    public static void printExit() {
+    public void printExit() {
         System.out.println("Bye! Hope to see you again!");
     }
 
-    public void printError (String errorMessage) {
-        System.out.println(errorMessage);
+    public void printError(String Message) {
+        System.out.println(Message);
     }
 
-    public void printList(ArrayList<Task> tasks) {
+    public void printList(List<Task> tasks) {
         if (tasks.isEmpty()) {
             System.out.println("No tasks at the moment. Have fun!");
         } else {
             System.out.println("This is your list: ");
             for (int i = 0; i < tasks.size(); i++) {
-                System.out.println("    " + (i + 1) + " " + tasks.get(i));
+                System.out.println("  " + (i + 1) + " " + tasks.get(i));
             }
         }
     }
@@ -61,5 +63,20 @@ public class Ui {
         System.out.println("Finished a task? Great!");
         System.out.println("I've helped you remove it from your list:");
         System.out.println("  " + task);
+    }
+
+    public void showFindResult(List<Task> tasks) {
+        if (tasks.size() == 0) {
+            System.out.println("Nothing here!");
+        } else {
+            System.out.println("Here's what I found:");
+            for (Task task : tasks) {
+                System.out.println("    " + task);
+            }
+        }
+    }
+
+    public void closeScanner() {
+        scanner.close();
     }
 }
