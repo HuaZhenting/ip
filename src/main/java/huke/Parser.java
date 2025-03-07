@@ -6,18 +6,38 @@ import huke.command.*;
 
 import java.time.format.DateTimeParseException;
 
+/**
+ * Parses user input to determine the appropriate command to execute.
+ * The class is responsible for converting user commands into Command objects that the program can process.
+ */
 public class Parser {
 
     private final TaskList TaskList;
     private final Ui ui;
     private final Storage storage;
 
+    /**
+     * Constructs a Parser object with the specified TaskList, Ui, and Storage objects.
+     *
+     * @param TaskList The list of tasks that the user can interact with.
+     * @param ui The Ui object for displaying information to the user.
+     * @param storage The Storage object to handle saving/loading tasks.
+     */
     public Parser(TaskList TaskList, Ui ui, Storage storage) {
         this.TaskList = TaskList;
         this.ui = ui;
         this.storage = storage;
     }
 
+    /**
+     * Parses the input command from the user.
+     * It splits the input into the command type and its description (if any),
+     * and returns the corresponding Command object for execution.
+     *
+     * @param input The user input string representing the command.
+     * @return The Command object that corresponds to the user input.
+     * @throws HukeException If the command is unknown or the input is invalid.
+     */
     public Command parse(String input) throws HukeException {
         if (input.isEmpty()) {
             return null;
@@ -36,6 +56,16 @@ public class Parser {
         return cmd;
     }
 
+    /**
+     * Determines which command to create based on the input command type.
+     *
+     * @param command The command type (e.g., "todo", "deadline", etc.).
+     * @param parts The parts of the user input split by space.
+     * @param description The description or details provided by the user.
+     * @param input The complete user input string.
+     * @return The appropriate Command object corresponding to the user input.
+     * @throws HukeException If there is an error in parsing the input or the command is invalid.
+     */
     private Command getCommand(String command, String[] parts, String description, String input) throws HukeException {
         switch (command) {
         case "bye":

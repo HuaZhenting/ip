@@ -7,9 +7,19 @@ import java.util.*;
 import huke.exception.HukeException;
 import huke.task.*;
 
+/**
+ * Handles reading from and writing to the storage file.
+ * This class manages loading tasks from a file and saving tasks to a file.
+ */
 public class Storage {
     private static String FILE_PATH;
 
+    /**
+     * Constructs a Storage object with the specified file path.
+     * If the file doesn't exist, it creates the necessary directories and the file.
+     *
+     * @param path The path to the storage file.
+     */
     public Storage(String path) {
         this.FILE_PATH = path;
         try {
@@ -23,6 +33,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Loads tasks from the storage file.
+     * It reads each line of the file, parsing it into a Task object.
+     *
+     * @return A list of tasks loaded from the file.
+     * @throws HukeException If there is an error while parsing the tasks or loading the file.
+     */
     public static ArrayList<Task> loadTask() throws HukeException {
         ArrayList<Task> tasks = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
@@ -42,6 +59,14 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Parses a single line of text into a Task object.
+     * The line should contain task information in the format "Type | DoneStatus | Description | [Additional Info]".
+     *
+     * @param line The line of text to parse.
+     * @return The corresponding Task object.
+     * @throws HukeException If the line is in an invalid format or the task type is unknown.
+     */
     private static Task parseTask(String line) throws HukeException {
         String[] parts = line.split(" \\| ");
         if (parts.length < 3) {
@@ -66,6 +91,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Saves the list of tasks to the storage file.
+     * It writes each task to the file in a specific format.
+     *
+     * @param tasks The list of tasks to save.
+     */
     public static void saveTask(ArrayList<Task> tasks) {
         try (BufferedWriter w = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (Task task : tasks) {
