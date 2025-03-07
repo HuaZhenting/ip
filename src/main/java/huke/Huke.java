@@ -1,9 +1,6 @@
 package huke;
 
-import huke.exception.MarkedException;
-import huke.exception.TaskNotSpecifiedException;
-import huke.exception.UnmarkedException;
-import huke.exception.WrongFormatException;
+import huke.exception.HukeException;
 import huke.task.Deadline;
 import huke.task.Event;
 import huke.task.Task;
@@ -40,17 +37,8 @@ public class Huke {
                     addTask(command);
                 }
                 Storage.saveTasks(tasks);
-            } catch (TaskNotSpecifiedException e) {
-                ui.printNotSpecified();
-            } catch (MarkedException e) {
-                ui.printMarked();
-            } catch (UnmarkedException e) {
-                ui.printUnmarked();
-            } catch (IndexOutOfBoundsException e) {
-                ui.printNonExist();
-            } catch (WrongFormatException e) {
-                ui.printWrongFormat();
-            }
+            } catch (HukeException e) {HukeException.DeadlineFormatMessage()}
+
         }
     }
 
@@ -65,12 +53,12 @@ public class Huke {
         Storage.saveTasks(tasks);
     }
 
-    private static void unmarkTask(String command) throws UnmarkedException, IndexOutOfBoundsException {
+    private static void unmarkTask(String command) throws HukeException, IndexOutOfBoundsException {
         int position = Integer.parseInt(command.substring(7)) - 1;
         if (position >= tasks.size() || position < 0) {
             throw new IndexOutOfBoundsException();
         } else if (tasks.get(position).getStatusIcon().equals(" ")) {
-            throw new UnmarkedException();
+            throw new HukeException();
         } else {
             tasks.get(position).setNotDone();
             System.out.println("OK, I've marked this task as not done yet:");
@@ -79,12 +67,12 @@ public class Huke {
         Storage.saveTasks(tasks);
     }
 
-    private static void markTask(String command) throws MarkedException, IndexOutOfBoundsException{
+    private static void markTask(String command) throws HukeException, IndexOutOfBoundsException{
         int position = Integer.parseInt(command.substring(5)) - 1;
         if (position >= tasks.size()|| (position < 0)) {
             throw new IndexOutOfBoundsException();
         } else if (tasks.get(position).getStatusIcon().equals("X")) {
-            throw new MarkedException();
+            throw new HukeException();
         } else {
             tasks.get(position).setDone();
             System.out.println("Nice! I've marked this task as done:");
@@ -93,40 +81,40 @@ public class Huke {
         Storage.saveTasks(tasks);
     }
 
-    private static void addTask (String command) throws WrongFormatException, TaskNotSpecifiedException {
+    private static void addTask (String command) throws HukeException {
         Task newTask;
         if (command.startsWith("todo")) {
             String taskDescription = command.substring(4).trim();
             if (taskDescription.isEmpty()) {
-                throw new TaskNotSpecifiedException();
+                throw new HukeException();
             }
             newTask = new Todo(taskDescription);
         } else if (command.startsWith("deadline")) {
             String taskDetails = command.substring(8).trim();
             if (taskDetails.isEmpty() || !taskDetails.contains(" /by ")) {
-                throw new WrongFormatException();
+                throw new HukeException();
             }
             String[] deadline = taskDetails.split(" /by ");
             if (deadline.length != 2 || deadline[0].trim().isEmpty() || deadline[1].trim().isEmpty()) {
-                throw new WrongFormatException();
+                throw new HukeException();
             }
             newTask = new Deadline(deadline[0].trim(), deadline[1].trim());
         } else if (command.startsWith("event")) {
             String taskDetails = command.substring(5).trim();
             if (taskDetails.isEmpty() || !taskDetails.contains(" /from ") || !taskDetails.contains(" /to ")) {
-                throw new WrongFormatException();
+                throw new HukeException();
             }
             String[] event = taskDetails.split(" /from ", 2);
             if (event.length != 2 || event[0].trim().isEmpty()) {
-                throw new WrongFormatException();
+                throw new HukeException();
             }
             String[] eventTime = event[1].split(" /to ", 2);
             if (eventTime.length != 2 || eventTime[0].trim().isEmpty() || eventTime[1].trim().isEmpty()) {
-                throw new WrongFormatException();
+                throw new HukeException();
             }
             newTask = new Event(event[0].trim(), eventTime[0].trim(), eventTime[1].trim());
         } else {
-            throw new TaskNotSpecifiedException();
+            throw new HukeException();
         }
         tasks.add(newTask);
         System.out.println("added: " + command);

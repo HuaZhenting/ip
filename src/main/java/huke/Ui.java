@@ -1,6 +1,24 @@
 package huke;
 
+import huke.task.*;
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class Ui {
+    private final Scanner scanner;
+
+    public Ui() {
+        this.scanner = new Scanner(System.in);
+    }
+
+    public String readCommand() {
+        if (scanner.hasNextLine()) {
+            return scanner.nextLine().trim();
+        } else {
+            return "";
+        }
+    }
+
     public static void printWelcome() {
         System.out.println("Hello! I'm huke!");
     }
@@ -9,22 +27,39 @@ public class Ui {
         System.out.println("Bye! Hope to see you again!");
     }
 
-    public static void printNotSpecified() {
-        System.out.println("Not sure what you want, please adhere to the format");
+    public void printError (String errorMessage) {
+        System.out.println(errorMessage);
     }
 
-    public static void printMarked() {
-        System.out.println("This huke.task.Task is already marked as Done!");
+    public void printList(ArrayList<Task> tasks) {
+        if (tasks.isEmpty()) {
+            System.out.println("No tasks at the moment. Have fun!");
+        } else {
+            System.out.println("This is your list: ");
+            for (int i = 0; i < tasks.size(); i++) {
+                System.out.println("    " + (i + 1) + " " + tasks.get(i));
+            }
+        }
     }
 
-    public static void printUnmarked() {
-        System.out.println("This Task is not done yet TAT");;
+    public void printAdd(Task task, int totalTasks) {
+        System.out.println("Great! I've added this task for you:");
+        System.out.println("  " + task);
     }
 
-    public static void printNonExist() {
-        System.out.println("Hummm, looks like you are referring to a non-existing task..");
+    public void printMark(Task task) {
+        System.out.println("I've helped you marked the task:");
+        System.out.println("  " + task);
     }
 
-    public static void printWrongFormat() {
-        System.out.println("Please adhere to the format");    }
+    public void printUnmark(Task task) {
+        System.out.println("I've helped you unmarked the task:");
+        System.out.println("  " + task);
+    }
+
+    public void printDelete(Task task, int totalTasks) {
+        System.out.println("Finished a task? Great!");
+        System.out.println("I've helped you remove it from your list:");
+        System.out.println("  " + task);
+    }
 }

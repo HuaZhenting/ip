@@ -27,5 +27,9 @@ public abstract class Task {
     public String toString() {
         return "[" + this.getStatusIcon() + "] " + description;
     }
+
+    public boolean contains(String term) {
+        return description.toLowerCase().contains(term.toLowerCase());
+    }
 }
 
