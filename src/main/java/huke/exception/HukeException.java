@@ -51,8 +51,8 @@ public class HukeException extends Exception {
      * @return The error message when the task is already marked as done.
      */
     public static String MarkedError() {
-        return "You want to mark the task?\n" +
-                "It is marked already! ";
+        return "Let me see...\n" +
+                "This task is marked already! ";
     }
 
     /**
@@ -61,8 +61,8 @@ public class HukeException extends Exception {
      * @return The error message when the task is already unmarked.
      */
     public static String UnmarkedError() {
-        return "You want to unmark the task?\n" +
-                "It is unmarked already! ";
+        return "Let me see...\n" +
+                "This task is unmarked already! ";
     }
 
     /**
@@ -85,7 +85,7 @@ public class HukeException extends Exception {
         return "Did you give me the wrong task number? \n" +
                 "Let me give you a hint: \n" +
                 "The task number should be an integer from 1 to " +
-                (totalNumber - 1);
+                (totalNumber);
     }
 
     /**

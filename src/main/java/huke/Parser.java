@@ -72,6 +72,15 @@ public class Parser {
             return new ExitCommand();
         case "list":
             return new ListCommand();
+        case "mark":
+            return new MarkCommand(parts);
+        case "unmark":
+            return new UnmarkCommand(parts);
+        case "delete":
+            if (description == null) {
+                throw new HukeException(HukeException.unknownError());
+            }
+            return new DeleteCommand(description);
         case "todo":
             if (description == null) {
                 throw new HukeException(HukeException.todoError());
@@ -82,8 +91,8 @@ public class Parser {
                 throw new HukeException(HukeException.deadlineError());
             }
             try {
-                String[] partDeadline = description.split("/by ", 2);
-                return new AddCommand(new Deadline(partDeadline[0].trim(), partDeadline[1].trim()));
+                String[] splited = description.split("/by ", 2);
+                return new AddCommand(new Deadline(splited[0].trim(), splited[1].trim()));
             } catch (DateTimeParseException e) {
                 throw new HukeException(HukeException.deadlineError());
             }
@@ -92,26 +101,17 @@ public class Parser {
                 throw new HukeException(HukeException.eventError());
             }
 
-            String[] partEvent = description.split("/from|/to");
-            if (partEvent.length < 3) {
+            String[] splited = description.split("/from|/to");
+            if (splited.length < 3) {
                 throw new HukeException(HukeException.eventError());
             }
             try {
-                String startTimeString = partEvent[1].trim();
-                String endTimeString = partEvent[2].trim();
-                return new AddCommand(new Event(partEvent[0].trim(), startTimeString, endTimeString));
+                String startTimeString = splited[1].trim();
+                String endTimeString = splited[2].trim();
+                return new AddCommand(new Event(splited[0].trim(), startTimeString, endTimeString));
             } catch (DateTimeParseException e) {
                 throw new HukeException(HukeException.eventError());
             }
-        case "mark":
-            return new MarkOrUnmarkCommand(parts, command);
-        case "unmark":
-            return new MarkOrUnmarkCommand(parts, command);
-        case "delete":
-            if (description == null) {
-                throw new HukeException(HukeException.unknownError());
-            }
-            return new DeleteCommand(description);
         case "find":
             if (description == null) {
                 throw new HukeException(HukeException.findError());

@@ -6,26 +6,23 @@ import huke.Storage;
 import huke.task.TaskList;
 
 /**
- * Represents a command that marks or unmarks a task in the Huke task management system.
- * This class is responsible for executing the mark or unmark operation on a specific task.
+ * Represents a command that unmarks a task in the Huke task management system.
+ * This class is responsible for executing the unmark operation on a specific task.
  */
-public class MarkOrUnmarkCommand extends Command {
-    private final String command;
+public class UnmarkCommand extends Command {
     private final String[] parts;
 
     /**
-     * Constructs a MarkOrUnmarkCommand with the given command parts and command type (mark/unmark).
+     * Constructs a UnmarkCommand with the given command parts.
      *
      * @param parts   The command parts, where the second element is the task number.
-     * @param command The command type, either "mark" or "unmark".
      */
-    public MarkOrUnmarkCommand(String[] parts, String command) {
+    public UnmarkCommand(String[] parts) {
         this.parts = parts;
-        this.command = command;
     }
 
     /**
-     * Executes the mark or unmark command by either marking or unmarking the task at the specified index.
+     * Executes the unmark command by either unmarking the task at the specified index.
      *
      * <p>If the task number is invalid or there are not enough arguments, an error message is displayed.
      * The task number is expected to be the second element in the parts array.</p>
@@ -40,11 +37,7 @@ public class MarkOrUnmarkCommand extends Command {
             if (parts.length < 2) {
                 throw new HukeException(HukeException.unknownCommandError());
             }
-            if (command.equals("mark")) {
-                tasks.markTask(Integer.parseInt(parts[1]));
-            } else {
-                tasks.unmarkTask(Integer.parseInt(parts[1]));
-            }
+            tasks.unmarkTask(Integer.parseInt(parts[1]));
         } catch (NumberFormatException e) {
             ui.printError("Invalid task number format. Please enter a valid number.");
         } catch (HukeException e) {

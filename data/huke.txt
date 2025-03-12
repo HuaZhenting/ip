@@ -1,6 +1,6 @@
 T | 0 | 1
-D | 0 | Submit assignment | 15/3/2024 2359
+D | 1 | Submit assignment | 15/3/2024 2359
 E | 0 | Coding workshop | 20/6/2025 0930 | 20/6/2025 1200
-E | 0 | Meeting with client | 20/6/2025 0930 | 20/6/2025 1200
+E | 1 | Meeting with client | 20/6/2025 0930 | 20/6/2025 1200
 T | 0 | play
 E | 0 | Meeting with client | 20/6/2025 0930 | 20/6/2025 1200
