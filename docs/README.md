@@ -1,4 +1,4 @@
-# Huke.huke User Guide
+# Huke Chatbot User Guide
 
 Welcome to Huke! 
 This task management system helps you manage your tasks efficiently. 
