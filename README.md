@@ -1,26 +1,78 @@
-# huke.huke project template
+# Huke.huke User Guide
 
-This is a project template for a greenfield Java project. It's named after the Java mascot _Duke_. Given below are instructions on how to use it.
+Welcome to Huke! 
+This task management system helps you manage your tasks efficiently. 
+You can add tasks, mark and unmark them, delete them, and even search for specific tasks. 
+The available task types are To-Do, Deadline, and Event.
 
-## Setting up in Intellij
+## Adding a todo
+To add a to-do task, use the todo command followed by a description.
+todo <description>
+Example: todo play
+Expected Outcome: 
+    Great! I've added this task for you:
+    [T][ ] play
 
-Prerequisites: JDK 17, update Intellij to the most recent version.
+## Adding a deadline
+To add a deadline task, 
+use the deadline command followed by the description and /by for the deadline time.
+deadline <description> /by <deadline_time>
+Example: deadline Submit assignment /by 15/3/2024 2359
+Expected Outcome: 
+    Great! I've added this task for you:
+    [D][ ] Submit assignment (by: Mar 15 2024 23:59)
 
-1. Open Intellij (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project first)
-1. Open the project into Intellij as follows:
-   1. Click `Open`.
-   1. Select the project directory, and click `OK`.
-   1. If there are any further prompts, accept the defaults.
-1. Configure the project to use **JDK 17** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
-   In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/huke.huke.java` file, right-click it, and choose `Run huke.huke.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
-   ```
-   Hello from
-    ____        _        
-   |  _ \ _   _| | _____ 
-   | | | | | | | |/ / _ \
-   | |_| | |_| |   <  __/
-   |____/ \__,_|_|\_\___|
-   ```
+## Adding a event
+To add an event task, 
+use the event command with /from for the start time and /to for the end time.
+event <description> /from <start_time> /to <end_time>
+Example: event Meeting with client /from 20/6/2025 0930 /to 20/6/2025 1200
+Expected Outcome: 
+    Great! I've added this task for you:
+    [E][ ] Meeting with client (from: Jun 20 2025 09:30 to: Jun 20 2025 12:00)
 
-**Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+
+## Listing tasks
+To see all your tasks, use the list command. 
+It will show you a numbered list of tasks along with their type and status.
+Example: list
+Expected Outcome:
+    This is your list:
+    1 [T][ ] 1
+    2 [D][ ] Submit assignment (by: Mar 15 2024 23:59)
+    3 [E][ ] Coding workshop (from: Jun 20 2025 09:30 to: Jun 20 2025 12:00)
+    4 [E][ ] Meeting with client (from: Jun 20 2025 09:30 to: Jun 20 2025 12:00)
+
+
+## Marking Tasks as Done
+To mark a task as completed, use the mark command followed by the task number.
+mark <task_number>
+Example: mark 5
+Expected Outcome:
+    I've helped you mark the task:
+    [T][X] play
+
+## Unmarking Tasks
+To unmark a task, use the unmark command followed by the task number.
+unmark <task_number>
+Example: unmark 5
+Expected Outcome:
+    I've helped you unmark the task:
+    [T][ ] play
+
+## Deleting Tasks
+To delete a task, use the delete command followed by the task number.
+delete <task_number>
+Example: delete 6
+Expected Outcome:
+    Finished a task? Great!
+    I've helped you remove it from your list:
+    [D][ ] Submit assignment (by: Mar 15 2024 23:59)
+
+## Finding Tasks
+To search for a task, use the find command followed by a keyword in the description.
+find <keyword>
+Example: find workshop
+Expected Outcome:
+    Here's what I found:
+    [E][ ] Coding workshop (from: Jun 20 2025 09:30 to: Jun 20 2025 12:00)

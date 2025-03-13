@@ -91,7 +91,7 @@ public class Parser {
                 throw new HukeException(HukeException.deadlineError());
             }
             try {
-                String[] splited = description.split("/by ", 2);
+                String[] splited = description.toLowerCase().split("/by ", 2);
                 return new AddCommand(new Deadline(splited[0].trim(), splited[1].trim()));
             } catch (DateTimeParseException e) {
                 throw new HukeException(HukeException.deadlineError());
@@ -101,7 +101,7 @@ public class Parser {
                 throw new HukeException(HukeException.eventError());
             }
 
-            String[] splited = description.split("/from|/to");
+            String[] splited = description.toLowerCase().split("/from|/to");
             if (splited.length < 3) {
                 throw new HukeException(HukeException.eventError());
             }
